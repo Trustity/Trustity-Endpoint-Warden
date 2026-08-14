@@ -3,7 +3,7 @@
 [![Release](https://img.shields.io/github/v/release/Trustity/Trustity-Endpoint-Warden)](https://github.com/Trustity/Trustity-Endpoint-Warden/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/Trustity/Trustity-Endpoint-Warden/total.svg)](https://github.com/Trustity/Trustity-Endpoint-Warden/releases)
 
-**`trustity-audit`** is an open-source CLI from [Trustity Labs](https://labs.trustity.co). It runs a local endpoint security and hardening audit on Windows and Linux (macOS works for local use).
+**`trustity-audit`** is an open-source CLI from [Trustity Labs](https://trustitylabs.com). It runs a local endpoint security and hardening audit on Windows and Linux (macOS works for local use).
 
 No telemetry. No cloud. The scan stays on the machine you run it on.
 
@@ -178,7 +178,7 @@ Trustity-Endpoint-Warden/
 
 ## Trustity Labs
 
-Endpoint Warden is a research surface of [Trustity Labs](https://labs.trustity.co/#endpoint-warden).
+Endpoint Warden is a research surface of [Trustity Labs](https://trustitylabs.com/#endpoint-warden).
 Product suite: [trustity.co](https://trustity.co).
 
 ---
