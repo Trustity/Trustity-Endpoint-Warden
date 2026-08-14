@@ -221,7 +221,10 @@ fn parse_command_output(cmd: &[&str], label: &str) -> Vec<Finding> {
         Ok(out) => findings.push(Finding::info(
             "Network",
             format!("{label} exited {}", out.status),
-            String::from_utf8_lossy(&out.stderr).chars().take(180).collect(),
+            String::from_utf8_lossy(&out.stderr)
+                .chars()
+                .take(180)
+                .collect::<String>(),
         )),
         Err(err) => findings.push(Finding::info(
             "Network",
