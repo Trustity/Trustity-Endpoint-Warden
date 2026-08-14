@@ -57,7 +57,6 @@ fn windows_persistence() -> Vec<Finding> {
         }
     }
 
-    // Machine-wide Run may require elevation
     let hklm = winreg::RegKey::predef(winreg::enums::HKEY_LOCAL_MACHINE);
     match hklm.open_subkey(r"Software\Microsoft\Windows\CurrentVersion\Run") {
         Ok(key) => {
@@ -159,7 +158,6 @@ fn unix_persistence() -> Vec<Finding> {
         }
     }
 
-    // macOS / generic user agents (harmless extra on Linux if missing)
     if let Some(home) = std::env::var_os("HOME") {
         let launch = Path::new(&home).join("Library/LaunchAgents");
         scan_dir(&mut findings, "launch agents", &launch, Some(".plist"));

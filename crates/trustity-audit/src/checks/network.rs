@@ -45,7 +45,6 @@ fn linux_proc_net() -> Vec<Finding> {
             let local = parse_proc_addr(cols[1]);
             let remote = parse_proc_addr(cols[2]);
             let state = cols[3];
-            // TCP listen = 0A, established = 01
             if proto.starts_with("tcp") && state.eq_ignore_ascii_case("0A") {
                 listen += 1;
                 if samples.len() < 8 {
@@ -54,7 +53,7 @@ fn linux_proc_net() -> Vec<Finding> {
             } else if proto.starts_with("tcp") && state.eq_ignore_ascii_case("01") {
                 established += 1;
                 if samples.len() < 12 {
-                    samples.push(format!("{proto} ESTAB {local} → {remote}"));
+                    samples.push(format!("{proto} ESTAB {local} -> {remote}"));
                 }
             }
         }
@@ -87,7 +86,7 @@ fn linux_proc_net() -> Vec<Finding> {
         findings.push(Finding::warn(
             "Network",
             "Large listen surface",
-            format!("{listen} listening sockets — tighten unused services"),
+            format!("{listen} listening sockets; unused services increase exposure"),
         ));
     } else {
         findings.push(Finding::pass(

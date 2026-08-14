@@ -16,5 +16,4 @@ owo-colors = "4.2"
 regex = "1.11"
 serde = { version = "1.0", features = ["derive"] }
 chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
-thiserror = "2.0"
 hostname = "0.4"

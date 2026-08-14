@@ -1,6 +1,9 @@
 # Trustity Endpoint Warden
 
-**`trustity-audit`** is a high-performance, open-source CLI from [Trustity Labs](https://labs.trustity.co). It runs a **local endpoint security and hardening audit** on Windows and Linux (Unix/macOS supported for local use).
+[![Release](https://img.shields.io/github/v/release/Trustity/Trustity-Endpoint-Warden)](https://github.com/Trustity/Trustity-Endpoint-Warden/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/Trustity/Trustity-Endpoint-Warden/total.svg)](https://github.com/Trustity/Trustity-Endpoint-Warden/releases)
+
+**`trustity-audit`** is an open-source CLI from [Trustity Labs](https://labs.trustity.co). It runs a local endpoint security and hardening audit on Windows and Linux (macOS works for local use).
 
 No telemetry. No cloud. The scan stays on the machine you run it on.
 
@@ -18,45 +21,65 @@ No telemetry. No cloud. The scan stays on the machine you run it on.
 
 ---
 
-> **⚠️ Experimental Engineering**  
-> All tools and POCs in Trustity Labs are strictly for **research and experimental purposes**.  
-> **Use at your own risk. Not for production environments.**  
-> Findings are heuristics — always review with a human before acting.
+> **Experimental Engineering**
+>
+> All tools and POCs in Trustity Labs are strictly for research and experimental purposes.
+> **Use at your own risk. Not for production environments.**
+> Findings are heuristics. Review them before you act.
 
 ---
 
-## Clone / download
+## Download (no compile)
+
+Grab a prebuilt binary from the latest release:
+
+**[github.com/Trustity/Trustity-Endpoint-Warden/releases/latest](https://github.com/Trustity/Trustity-Endpoint-Warden/releases/latest)**
+
+| Archive | Platform |
+|---------|----------|
+| `*-x86_64-unknown-linux-gnu.tar.gz` | Linux x86_64 |
+| `*-x86_64-pc-windows-msvc.zip` | Windows x86_64 |
+| `*-aarch64-apple-darwin.tar.gz` | macOS Apple Silicon |
+| `*-x86_64-apple-darwin.tar.gz` | macOS Intel |
+
+Linux / macOS:
+
+```bash
+tar -xzf trustity-audit-*.tar.gz
+cd trustity-audit-*
+chmod +x trustity-audit
+./trustity-audit
+```
+
+Windows: unzip and run `trustity-audit.exe`.
+
+Checksums: `SHA256SUMS.txt` on the same release page.
+
+---
+
+## Clone
 
 ```bash
 git clone https://github.com/Trustity/Trustity-Endpoint-Warden.git
 cd Trustity-Endpoint-Warden
 ```
 
-Repository: [github.com/Trustity/Trustity-Endpoint-Warden](https://github.com/Trustity/Trustity-Endpoint-Warden)
-
 ---
 
-## Requirements
+## Build from source
 
-- [Rust](https://rustup.rs/) **1.75+** (`rustc`, `cargo`)
-- Windows, Linux, or macOS
-
----
-
-## Build
+Requires [Rust](https://rustup.rs/) 1.75+ (`rustc`, `cargo`).
 
 ```bash
 cargo build --release
 ```
 
-The optimized binary is written to:
-
-| Platform | Path |
-|----------|------|
+| Platform | Binary |
+|----------|--------|
 | Linux / macOS | `./target/release/trustity-audit` |
 | Windows | `.\target\release\trustity-audit.exe` |
 
-Install onto your `PATH` (optional):
+Optional:
 
 ```bash
 cargo install --path crates/trustity-audit
@@ -67,21 +90,12 @@ cargo install --path crates/trustity-audit
 ## Usage
 
 ```bash
-# Full audit (banner + colorized findings)
 ./target/release/trustity-audit
-
-# Skip ASCII banner
 ./target/release/trustity-audit --quiet
-
-# Skip a category
 ./target/release/trustity-audit --skip-network
-
-# Export a branded report
 ./target/release/trustity-audit --export markdown
 ./target/release/trustity-audit --export html --output ./warden-report.html
 ```
-
-### Flags
 
 | Flag | Description |
 |------|-------------|
@@ -93,9 +107,9 @@ cargo install --path crates/trustity-audit
 | `--skip-permissions` | Skip sensitive path permission checks |
 | `--skip-secrets` | Skip environment-variable secret scan |
 
-**Exit codes:** `0` if no `FAIL` findings · `1` if any `FAIL` · `2` if report export fails.
+Exit codes: `0` if no `FAIL` · `1` if any `FAIL` · `2` if report export fails.
 
-Exported reports always include:
+Exported reports include:
 
 **Generated securely by Trustity Labs (https://trustity.co)**
 
@@ -105,10 +119,10 @@ Exported reports always include:
 
 | Area | Windows | Linux |
 |------|---------|--------|
-| **Startup / persistence** | `HKCU`/`HKLM` Run keys, Startup folder | cron paths, systemd units |
-| **Network** | `netstat` listen + established | `/proc/net/tcp*` |
-| **Permissions** | Presence of sensitive paths | World-writable dirs, SSH key modes, `/etc/shadow` |
-| **Secrets** | Regex + name heuristics over process environment (values redacted) | Same |
+| Startup / persistence | `HKCU`/`HKLM` Run keys, Startup folder | cron paths, systemd units |
+| Network | `netstat` listen + established | `/proc/net/tcp*` |
+| Permissions | Presence of sensitive paths | World-writable dirs, SSH key modes, `/etc/shadow` |
+| Secrets | Regex + name heuristics over the process environment (values redacted) | Same |
 
 ---
 
@@ -130,7 +144,7 @@ Exported reports always include:
   ▸ Permissions
     [PASS] /tmp sticky/world-write policy ok
     [FAIL] ~/.ssh/id_ed25519 is group/world accessible
-           mode 644 — expected 600
+           mode 644, expected 600
   ▸ Secrets
     [PASS] No high-confidence secrets in environment
 
@@ -146,34 +160,26 @@ Statuses: **PASS** (green) · **WARN** (amber) · **FAIL** (red) · **INFO** (bl
 
 ```text
 Trustity-Endpoint-Warden/
-├── Cargo.toml                 # workspace
+├── Cargo.toml
 ├── LICENSE
 ├── README.md
-└── crates/trustity-audit/     # binary crate → trustity-audit
-    ├── Cargo.toml
-    └── src/
-        ├── main.rs
-        ├── banner.rs
-        ├── cli.rs
-        ├── finding.rs
-        ├── report.rs
-        └── checks/
+└── crates/trustity-audit/
 ```
 
 ---
 
 ## Safety notes
 
-- The tool inspects **this host only**. It does not upload results to Trustity.
-- Secret matches print **redacted** previews, never full tokens.
-- Some checks (HKLM, `/etc/shadow`) need elevation for a complete picture.
+- Inspects this host only. Results are not uploaded to Trustity.
+- Secret matches print redacted previews, never full tokens.
+- Some checks (`HKLM`, `/etc/shadow`) need elevation for a complete picture.
 
 ---
 
 ## Trustity Labs
 
-Endpoint Warden is a research surface of [Trustity Labs](https://labs.trustity.co/#endpoint-warden).  
-Trustity builds endpoint and edge security products — see [trustity.co](https://trustity.co).
+Endpoint Warden is a research surface of [Trustity Labs](https://labs.trustity.co/#endpoint-warden).
+Product suite: [trustity.co](https://trustity.co).
 
 ---
 

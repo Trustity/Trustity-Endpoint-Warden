@@ -1,0 +1,94 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            archive: tar.gz
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            archive: zip
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            archive: tar.gz
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            archive: tar.gz
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Build
+        run: cargo build --release --locked --target ${{ matrix.target }} --bin trustity-audit
+      - name: Package
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME}"
+          NAME="trustity-audit-${VERSION}-${{ matrix.target }}"
+          mkdir -p dist/"$NAME"
+          BIN="target/${{ matrix.target }}/release/trustity-audit"
+          if [ -f "${BIN}.exe" ]; then
+            cp "${BIN}.exe" dist/"$NAME"/
+          else
+            cp "$BIN" dist/"$NAME"/
+            chmod +x dist/"$NAME"/trustity-audit
+          fi
+          cp README.md LICENSE dist/"$NAME"/
+          cd dist
+          if [ "${{ matrix.archive }}" = "zip" ]; then
+            7z a -tzip "${NAME}.zip" "$NAME"
+          else
+            tar -czf "${NAME}.tar.gz" "$NAME"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Checksums
+        run: |
+          mkdir -p release
+          find artifacts -type f \( -name '*.tar.gz' -o -name '*.zip' \) -exec cp {} release/ \;
+          cd release
+          sha256sum * > SHA256SUMS.txt
+          ls -la
+      - uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: release/*
+          body: |
+            Prebuilt `trustity-audit` binaries. No telemetry. Runs locally.
+
+            | File | Platform |
+            | --- | --- |
+            | `trustity-audit-${{ github.ref_name }}-x86_64-unknown-linux-gnu.tar.gz` | Linux x86_64 |
+            | `trustity-audit-${{ github.ref_name }}-x86_64-pc-windows-msvc.zip` | Windows x86_64 |
+            | `trustity-audit-${{ github.ref_name }}-aarch64-apple-darwin.tar.gz` | macOS Apple Silicon |
+            | `trustity-audit-${{ github.ref_name }}-x86_64-apple-darwin.tar.gz` | macOS Intel |
+
+            Experimental research tool. Use at your own risk.

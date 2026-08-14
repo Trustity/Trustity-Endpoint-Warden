@@ -71,7 +71,7 @@ fn html_escape(s: &str) -> String {
 fn render_markdown(report: &Report) -> String {
     let (pass, warn, fail, info) = report.counts();
     let mut out = String::new();
-    out.push_str("# Trustity Labs — Endpoint Warden\n\n");
+    out.push_str("# Trustity Labs - Endpoint Warden\n\n");
     out.push_str(&format!("- **Host:** {}\n", report.host));
     out.push_str(&format!("- **OS:** {}\n", report.os));
     out.push_str(&format!("- **Generated:** {}\n\n", report.generated_at));
@@ -116,7 +116,7 @@ fn render_html(report: &Report) -> String {
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Trustity Labs Endpoint Warden — {host}</title>
+<title>Trustity Labs Endpoint Warden - {host}</title>
 <style>
   :root {{ color-scheme: dark; }}
   body {{ margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -144,7 +144,7 @@ fn render_html(report: &Report) -> String {
 </head>
 <body>
 <header>
-  <h1><span class="brand">TRUSTITY</span> <span class="accent">LABS</span> — Endpoint Warden</h1>
+  <h1><span class="brand">TRUSTITY</span> <span class="accent">LABS</span> - Endpoint Warden</h1>
   <p class="sub">{host} · {os} · {when}</p>
 </header>
 <main>

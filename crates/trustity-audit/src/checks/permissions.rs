@@ -35,7 +35,7 @@ fn windows_permissions() -> Vec<Finding> {
             findings.push(Finding::info(
                 "Permissions",
                 format!("present: {p}"),
-                "existence check only — use icacls for ACL review",
+                "existence check only; use icacls for ACL review",
             ));
         }
     }
@@ -141,7 +141,7 @@ fn unix_permissions() -> Vec<Finding> {
                                 findings.push(Finding::fail(
                                     "Permissions",
                                     format!("{} is group/world accessible", ent.path().display()),
-                                    format!("mode {mode:o} — expected 600"),
+                                    format!("mode {mode:o}, expected 600"),
                                 ));
                             } else {
                                 findings.push(Finding::pass(

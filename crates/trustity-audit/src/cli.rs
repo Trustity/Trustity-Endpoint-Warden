@@ -20,7 +20,7 @@ impl ExportFormat {
 #[command(
     name = "trustity-audit",
     version,
-    about = "Trustity Labs Endpoint Warden — local security & hardening audit",
+    about = "Trustity Labs Endpoint Warden: local security and hardening audit",
     long_about = "Experimental research CLI. Scans persistence, network, permissions, and leaked secrets on this host. Not for production decisions without human review."
 )]
 pub struct Cli {

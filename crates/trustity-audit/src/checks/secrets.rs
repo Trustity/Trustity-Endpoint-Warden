@@ -78,7 +78,7 @@ fn redact(value: &str) -> String {
         return "********".into();
     }
     format!(
-        "{}…{} ({} chars)",
+        "{}..{} ({} chars)",
         chars.iter().take(4).collect::<String>(),
         chars.iter().rev().take(2).rev().collect::<String>(),
         chars.len()

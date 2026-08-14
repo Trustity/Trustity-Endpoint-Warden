@@ -6,7 +6,7 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 authors.workspace = true
-description = "Local endpoint security and hardening audit CLI — Trustity Labs Endpoint Warden"
+description = "Local endpoint security and hardening audit CLI for Trustity Labs Endpoint Warden"
 readme = "../../README.md"
 keywords = ["security", "audit", "endpoint", "hardening", "cli"]
 categories = ["command-line-utilities"]
@@ -21,7 +21,6 @@ owo-colors.workspace = true
 regex.workspace = true
 serde.workspace = true
 chrono.workspace = true
-thiserror.workspace = true
 hostname.workspace = true
 
 [target.'cfg(windows)'.dependencies]
