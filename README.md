@@ -51,6 +51,19 @@ chmod +x trustity-audit
 ./trustity-audit
 ```
 
+macOS Gatekeeper will block the GitHub binary (it is not Apple-notarized). Either:
+
+1. Build from source (`cargo build --release`) and run `./target/release/trustity-audit`, or
+2. System Settings → Privacy & Security → Open Anyway, then run from Terminal, or
+3. After you have verified the SHA256 from the release:
+
+```bash
+xattr -d com.apple.quarantine ./trustity-audit
+./trustity-audit
+```
+
+Do not bypass this for binaries you did not download from the official Trustity release page.
+
 Windows (cmd or PowerShell — keep the window open):
 
 ```bat
