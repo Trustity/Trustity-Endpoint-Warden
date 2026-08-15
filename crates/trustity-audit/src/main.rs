@@ -3,12 +3,17 @@ mod checks;
 mod cli;
 mod finding;
 mod report;
+#[cfg(windows)]
+mod win_console;
 
 use clap::Parser;
 use cli::Cli;
 use finding::Report;
 
 fn main() {
+    #[cfg(windows)]
+    win_console::prepare();
+
     let cli = Cli::parse();
     if !cli.quiet {
         banner::print_banner();
@@ -39,7 +44,7 @@ fn main() {
             Ok(()) => eprintln!("  exported {}", path.display()),
             Err(err) => {
                 eprintln!("  export failed: {err}");
-                std::process::exit(2);
+                finish(2);
             }
         }
     }
@@ -48,7 +53,11 @@ fn main() {
         .findings
         .iter()
         .any(|f| f.status == finding::Status::Fail);
-    if fail {
-        std::process::exit(1);
-    }
+    finish(if fail { 1 } else { 0 });
+}
+
+fn finish(code: i32) -> ! {
+    #[cfg(windows)]
+    win_console::pause_if_owns_console();
+    std::process::exit(code);
 }

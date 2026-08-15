@@ -51,7 +51,14 @@ chmod +x trustity-audit
 ./trustity-audit
 ```
 
-Windows: unzip and run `trustity-audit.exe`.
+Windows (cmd or PowerShell — keep the window open):
+
+```bat
+cd path\to\extracted-folder
+trustity-audit.exe
+```
+
+Double-clicking the `.exe` also runs the scan; the window stays open until you press Enter.
 
 Checksums: `SHA256SUMS.txt` on the same release page.
 
